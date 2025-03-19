@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -82,10 +83,10 @@ const menuItems = [
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
-    <SidebarProvider collapsed={collapsed} onCollapsedChange={setCollapsed}>
+    <SidebarProvider defaultOpen={open} onOpenChange={setOpen}>
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="flex-1 flex flex-col min-h-screen">
