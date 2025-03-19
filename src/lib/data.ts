@@ -1,4 +1,3 @@
-
 export interface Location {
   id: string;
   name: string;
@@ -22,6 +21,12 @@ export interface Vendor {
   rating: number;
   joinedDate: string;
   active: boolean;
+  description?: string;
+  email?: string;
+  phone?: string;
+  website?: string;
+  verified?: boolean;
+  commissionRate?: number;
 }
 
 export const locations: Location[] = [
@@ -177,7 +182,13 @@ export const vendors: Vendor[] = [
     revenue: 85000,
     rating: 4.8,
     joinedDate: "2021-06-12",
-    active: true
+    active: true,
+    description: "Artisan Crafts specializes in handmade products crafted by local artisans across California.",
+    email: "info@artisancrafts.com",
+    phone: "+1 (415) 555-1234",
+    website: "https://artisancrafts.com",
+    verified: true,
+    commissionRate: 8
   },
   {
     id: "v2",
@@ -189,7 +200,13 @@ export const vendors: Vendor[] = [
     revenue: 62000,
     rating: 4.5,
     joinedDate: "2020-11-03",
-    active: true
+    active: true,
+    description: "Tech Haven offers the latest electronics and gadgets for tech enthusiasts.",
+    email: "sales@techhaven.com",
+    phone: "+1 (212) 555-5678",
+    website: "https://techhaven.com",
+    verified: true,
+    commissionRate: 12
   },
   {
     id: "v3",
@@ -201,7 +218,13 @@ export const vendors: Vendor[] = [
     revenue: 225000,
     rating: 4.7,
     joinedDate: "2019-04-25",
-    active: true
+    active: true,
+    description: "Global Goods sources unique products from around the world, bringing international flavors to your doorstep.",
+    email: "hello@globalgoods.com",
+    phone: "+1 (800) 555-9012",
+    website: "https://globalgoods.com",
+    verified: true,
+    commissionRate: 10
   },
   {
     id: "v4",
@@ -213,7 +236,13 @@ export const vendors: Vendor[] = [
     revenue: 72000,
     rating: 4.6,
     joinedDate: "2022-01-07",
-    active: true
+    active: true,
+    description: "Urban Essentials provides stylish and functional products for modern city living.",
+    email: "contact@urbanessentials.com",
+    phone: "+1 (628) 555-3456",
+    website: "https://urbanessentials.com",
+    verified: false,
+    commissionRate: 9.5
   },
   {
     id: "v5",
@@ -225,7 +254,13 @@ export const vendors: Vendor[] = [
     revenue: 78000,
     rating: 4.9,
     joinedDate: "2020-08-19",
-    active: true
+    active: true,
+    description: "Eco Wares specializes in sustainable and eco-friendly products for environmentally conscious consumers.",
+    email: "support@ecowares.com",
+    phone: "+1 (510) 555-7890",
+    website: "https://ecowares.com",
+    verified: true,
+    commissionRate: 7.5
   }
 ];
 
@@ -289,4 +324,31 @@ export const getLocationStats = () => {
   };
   
   return stats;
+};
+
+export const addVendor = (vendor: Omit<Vendor, "id">) => {
+  const newVendor = {
+    ...vendor,
+    id: `v${vendors.length + 1}`,
+  };
+  vendors.push(newVendor);
+  return newVendor;
+};
+
+export const updateVendor = (updatedVendor: Vendor) => {
+  const index = vendors.findIndex(v => v.id === updatedVendor.id);
+  if (index !== -1) {
+    vendors[index] = updatedVendor;
+    return updatedVendor;
+  }
+  return null;
+};
+
+export const deleteVendor = (vendorId: string) => {
+  const index = vendors.findIndex(v => v.id === vendorId);
+  if (index !== -1) {
+    vendors.splice(index, 1);
+    return true;
+  }
+  return false;
 };

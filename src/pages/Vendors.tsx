@@ -7,16 +7,62 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Vendor, locations, vendors } from "@/lib/data";
-import { Edit, ExternalLink, MapPin, Plus, Star, Trash2 } from "lucide-react";
+import { Vendor, locations, vendors, addVendor, updateVendor, deleteVendor } from "@/lib/data";
+import { Edit, ExternalLink, MapPin, Plus, Star, Trash2, FileText, CheckCircle } from "lucide-react";
+import { VendorForm } from "@/components/vendors/VendorForm";
+import { VendorDetail } from "@/components/vendors/VendorDetail";
+import { toast } from "sonner";
 
 const Vendors = () => {
   const [isAddVendorOpen, setIsAddVendorOpen] = useState(false);
+  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
+  const [vendorList, setVendorList] = useState<Vendor[]>(vendors);
+
+  const handleAddVendor = (data: any) => {
+    try {
+      const newVendor = addVendor({
+        ...data,
+        productsCount: 0,
+        ordersCount: 0,
+        revenue: 0,
+        rating: 0,
+        joinedDate: new Date().toISOString().split('T')[0],
+      });
+      
+      setVendorList([...vendorList, newVendor]);
+      setIsAddVendorOpen(false);
+      toast.success("Vendor added successfully");
+    } catch (error) {
+      toast.error("Failed to add vendor");
+      console.error(error);
+    }
+  };
+
+  const handleUpdateVendor = (updatedVendor: Vendor) => {
+    try {
+      updateVendor(updatedVendor);
+      setVendorList(vendorList.map(v => v.id === updatedVendor.id ? updatedVendor : v));
+      setSelectedVendor(null);
+      toast.success("Vendor updated successfully");
+    } catch (error) {
+      toast.error("Failed to update vendor");
+      console.error(error);
+    }
+  };
+
+  const handleDeleteVendor = (vendorId: string) => {
+    try {
+      deleteVendor(vendorId);
+      setVendorList(vendorList.filter(v => v.id !== vendorId));
+      setSelectedVendor(null);
+      toast.success("Vendor deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete vendor");
+      console.error(error);
+    }
+  };
 
   const columns: ColumnDef<Vendor>[] = [
     {
@@ -72,6 +118,25 @@ const Vendors = () => {
       ),
     },
     {
+      accessorKey: "verified",
+      header: "Verification",
+      cell: ({ row }) => (
+        <div className="flex items-center">
+          {row.original.verified ? (
+            <Badge className="bg-blue-500 hover:bg-blue-600 flex items-center gap-1">
+              <CheckCircle className="h-3 w-3" />
+              <span>Verified</span>
+            </Badge>
+          ) : (
+            <Badge variant="outline" className="text-amber-500 hover:text-amber-600 flex items-center gap-1">
+              <FileText className="h-3 w-3" />
+              <span>Pending</span>
+            </Badge>
+          )}
+        </div>
+      ),
+    },
+    {
       accessorKey: "active",
       header: "Status",
       cell: ({ row }) => (
@@ -87,13 +152,30 @@ const Vendors = () => {
       id: "actions",
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={() => setSelectedVendor(row.original)}
+          >
             <ExternalLink className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => setSelectedVendor(row.original)}
+          >
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="text-destructive">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="text-destructive"
+            onClick={() => {
+              if (window.confirm(`Are you sure you want to delete ${row.original.name}?`)) {
+                handleDeleteVendor(row.original.id);
+              }
+            }}
+          >
             <Trash2 className="h-4 w-4" />
           </Button>
         </div>
@@ -111,89 +193,56 @@ const Vendors = () => {
           </p>
         </div>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="space-y-1">
-              <CardTitle>Vendors</CardTitle>
-              <CardDescription>
-                Manage vendors across all your marketplace locations
-              </CardDescription>
-            </div>
+        {selectedVendor ? (
+          <VendorDetail 
+            vendor={selectedVendor} 
+            onClose={() => setSelectedVendor(null)} 
+            onEdit={handleUpdateVendor}
+            onDelete={handleDeleteVendor}
+          />
+        ) : (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div className="space-y-1">
+                <CardTitle>Vendors</CardTitle>
+                <CardDescription>
+                  Manage vendors across all your marketplace locations
+                </CardDescription>
+              </div>
 
-            <Dialog open={isAddVendorOpen} onOpenChange={setIsAddVendorOpen}>
-              <DialogTrigger asChild>
-                <Button className="flex items-center gap-1">
-                  <Plus className="h-4 w-4" />
-                  <span>Add Vendor</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[500px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Vendor</DialogTitle>
-                  <DialogDescription>
-                    Register a new vendor to your marketplace
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-6 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">
-                      Name
-                    </Label>
-                    <Input id="name" placeholder="Vendor name" className="col-span-3" />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="logo" className="text-right">
-                      Logo URL
-                    </Label>
-                    <Input id="logo" placeholder="https://..." className="col-span-3" />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="locations" className="text-right">
-                      Locations
-                    </Label>
-                    <Select>
-                      <SelectTrigger id="locations" className="col-span-3">
-                        <SelectValue placeholder="Select locations" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {locations.map((location) => (
-                          <SelectItem key={location.id} value={location.id}>
-                            {location.name} ({location.type})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <div className="col-start-2 col-span-3 flex items-center space-x-2">
-                      <Checkbox id="active" defaultChecked />
-                      <label
-                        htmlFor="active"
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      >
-                        Active vendor
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setIsAddVendorOpen(false)}>
-                    Cancel
+              <Dialog open={isAddVendorOpen} onOpenChange={setIsAddVendorOpen}>
+                <DialogTrigger asChild>
+                  <Button className="flex items-center gap-1">
+                    <Plus className="h-4 w-4" />
+                    <span>Add Vendor</span>
                   </Button>
-                  <Button onClick={() => setIsAddVendorOpen(false)}>Add Vendor</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <DataTable
-              columns={columns}
-              data={vendors}
-              searchColumn="name"
-              searchPlaceholder="Search vendors..."
-            />
-          </CardContent>
-        </Card>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[800px]">
+                  <DialogHeader>
+                    <DialogTitle>Add New Vendor</DialogTitle>
+                    <DialogDescription>
+                      Register a new vendor to your marketplace
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="py-4">
+                    <VendorForm 
+                      onSubmit={handleAddVendor} 
+                      onCancel={() => setIsAddVendorOpen(false)} 
+                    />
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <DataTable
+                columns={columns}
+                data={vendorList}
+                searchColumn="name"
+                searchPlaceholder="Search vendors..."
+              />
+            </CardContent>
+          </Card>
+        )}
       </div>
     </DashboardLayout>
   );
