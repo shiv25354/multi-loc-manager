@@ -69,7 +69,7 @@ export function OrderDetailsDialog({
             </Badge>
           </DialogTitle>
           <DialogDescription>
-            Placed on {new Date(order.orderDate).toLocaleDateString()}
+            Placed on {new Date(order.createdAt).toLocaleDateString()}
           </DialogDescription>
         </DialogHeader>
 
@@ -80,21 +80,21 @@ export function OrderDetailsDialog({
                 <User className="h-4 w-4 mr-2" />
                 Customer Details
               </h4>
-              <p>{order.customer.name}</p>
-              <p>{order.customer.email}</p>
-              <p>{order.customer.phone}</p>
+              <p>{order.customerName}</p>
+              <p>{order.customerEmail}</p>
+              <p>{order.customerPhone}</p>
             </div>
             <div>
               <h4 className="font-medium mb-2 flex items-center">
                 <MapPin className="h-4 w-4 mr-2" />
                 Delivery Address
               </h4>
-              <p>{order.shippingAddress.street}</p>
+              <p>{order.deliveryAddress.street}</p>
               <p>
-                {order.shippingAddress.city}, {order.shippingAddress.state}{" "}
-                {order.shippingAddress.zipCode}
+                {order.deliveryAddress.city}, {order.deliveryAddress.state}{" "}
+                {order.deliveryAddress.zipCode}
               </p>
-              <p>{order.shippingAddress.country}</p>
+              <p>{order.deliveryAddress.country}</p>
             </div>
           </div>
 
@@ -106,9 +106,9 @@ export function OrderDetailsDialog({
               Order Items
             </h4>
             <div className="space-y-2">
-              {order.items.map((item) => (
+              {order.products.map((item) => (
                 <div
-                  key={item.productId}
+                  key={item.id}
                   className="flex justify-between border-b pb-2"
                 >
                   <div>
@@ -127,7 +127,7 @@ export function OrderDetailsDialog({
 
           <div className="flex justify-between font-medium">
             <span>Subtotal:</span>
-            <span>${order.total.toFixed(2)}</span>
+            <span>${order.totalAmount.toFixed(2)}</span>
           </div>
 
           <Separator />
@@ -140,7 +140,7 @@ export function OrderDetailsDialog({
             <div className="flex items-center">
               <Clock className="h-4 w-4 mr-2" />
               <span className="text-sm text-muted-foreground">
-                Last updated: {new Date(order.lastUpdated).toLocaleString()}
+                Last updated: {new Date(order.updatedAt).toLocaleString()}
               </span>
             </div>
           </div>

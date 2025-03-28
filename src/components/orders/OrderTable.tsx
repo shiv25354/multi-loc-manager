@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { 
   OrderStatus, 
+  Order,
   orders, 
   getOrdersByStatus, 
   statusLabels, 
@@ -40,7 +41,7 @@ interface OrderTableProps {
 }
 
 export function OrderTable({ filters, onStatusUpdate }: OrderTableProps) {
-  const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   // Filter orders based on the current filters
   const filteredOrders = React.useMemo(() => {
@@ -59,7 +60,8 @@ export function OrderTable({ filters, onStatusUpdate }: OrderTableProps) {
   }, [filters]);
 
   const handleRowClick = (orderId: string) => {
-    setSelectedOrder(orderId);
+    const order = filteredOrders.find(o => o.id === orderId) || null;
+    setSelectedOrder(order);
   };
 
   const closeDialog = () => {
@@ -67,6 +69,7 @@ export function OrderTable({ filters, onStatusUpdate }: OrderTableProps) {
   };
 
   const getNextStatusOptions = (currentStatus: OrderStatus): OrderStatus[] => {
+    // ... keep existing code (status transition logic)
     switch (currentStatus) {
       case 'new':
         return ['confirmed', 'cancelled'];
@@ -95,6 +98,7 @@ export function OrderTable({ filters, onStatusUpdate }: OrderTableProps) {
   };
 
   const StatusCell = ({ row }: CellContext<any, unknown>) => {
+    // ... keep existing code (status cell rendering)
     const status = row.original.status;
     const orderId = row.original.id;
     const nextStatusOptions = getNextStatusOptions(status);
@@ -130,6 +134,7 @@ export function OrderTable({ filters, onStatusUpdate }: OrderTableProps) {
   };
 
   const getStatusIcon = (status: OrderStatus) => {
+    // ... keep existing code (status icon rendering)
     switch (status) {
       case 'confirmed':
         return <Calendar className="h-4 w-4" />;
@@ -214,9 +219,11 @@ export function OrderTable({ filters, onStatusUpdate }: OrderTableProps) {
       />
       {selectedOrder && (
         <OrderDetailsDialog
-          orderId={selectedOrder}
-          open={Boolean(selectedOrder)}
-          onClose={closeDialog}
+          order={selectedOrder}
+          isOpen={Boolean(selectedOrder)}
+          onOpenChange={(open) => {
+            if (!open) closeDialog();
+          }}
           onStatusUpdate={handleStatusChange}
         />
       )}
