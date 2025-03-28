@@ -29,6 +29,43 @@ export interface Vendor {
   commissionRate?: number;
 }
 
+export interface DeliveryBoy {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  avatar?: string;
+  address: Partial<Address>;
+  assignedZones: string[]; // Location IDs
+  active: boolean;
+  currentLocation?: { lat: number; lng: number };
+  rating: number;
+  totalDeliveries: number;
+  totalEarnings: number;
+  joinedDate: string;
+  status: 'available' | 'on_delivery' | 'offline';
+  currentOrderId?: string;
+}
+
+export interface DeliveryPerformance {
+  deliveryBoyId: string;
+  date: string;
+  completedOrders: number;
+  earnings: number;
+  rating: number;
+  averageDeliveryTime: number; // in minutes
+}
+
+export interface DeliveryNotification {
+  id: string;
+  deliveryBoyId: string;
+  orderId: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+  type: 'assignment' | 'update' | 'alert';
+}
+
 export const locations: Location[] = [
   {
     id: "us",
@@ -261,6 +298,141 @@ export const vendors: Vendor[] = [
     website: "https://ecowares.com",
     verified: true,
     commissionRate: 7.5
+  }
+];
+
+export const deliveryBoys: DeliveryBoy[] = [
+  {
+    id: "d1",
+    name: "Mike Johnson",
+    email: "mike.johnson@example.com",
+    phone: "+1 555-123-4567",
+    avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80",
+    address: {
+      street: "123 Delivery St",
+      city: "San Francisco",
+      state: "CA",
+      zipCode: "94105",
+      country: "USA"
+    },
+    assignedZones: ["us-ca-sf", "us-ca-sf-downtown"],
+    active: true,
+    currentLocation: { lat: 37.7749, lng: -122.4194 },
+    rating: 4.8,
+    totalDeliveries: 245,
+    totalEarnings: 4725.50,
+    joinedDate: "2022-01-15",
+    status: "available"
+  },
+  {
+    id: "d2",
+    name: "Sarah Williams",
+    email: "sarah.williams@example.com",
+    phone: "+1 555-789-1234",
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80",
+    address: {
+      street: "456 Runner Ave",
+      city: "New York",
+      state: "NY",
+      zipCode: "10013",
+      country: "USA"
+    },
+    assignedZones: ["us-ny-nyc", "us-ny-nyc-manhattan"],
+    active: true,
+    currentLocation: { lat: 40.7128, lng: -74.0060 },
+    rating: 4.7,
+    totalDeliveries: 189,
+    totalEarnings: 3670.25,
+    joinedDate: "2022-03-22",
+    status: "on_delivery",
+    currentOrderId: "ORD-003"
+  },
+  {
+    id: "d3",
+    name: "David Chen",
+    email: "david.chen@example.com",
+    phone: "+1 555-456-7890",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80",
+    address: {
+      street: "789 Maple St",
+      city: "Toronto",
+      state: "ON",
+      zipCode: "M5V 1M9",
+      country: "Canada"
+    },
+    assignedZones: ["ca-on"],
+    active: false,
+    currentLocation: { lat: 43.6532, lng: -79.3832 },
+    rating: 4.5,
+    totalDeliveries: 102,
+    totalEarnings: 1985.75,
+    joinedDate: "2022-08-10",
+    status: "offline"
+  }
+];
+
+export const deliveryPerformances: DeliveryPerformance[] = [
+  {
+    deliveryBoyId: "d1",
+    date: "2023-10-14",
+    completedOrders: 8,
+    earnings: 156.50,
+    rating: 4.9,
+    averageDeliveryTime: 28
+  },
+  {
+    deliveryBoyId: "d1",
+    date: "2023-10-15",
+    completedOrders: 10,
+    earnings: 187.25,
+    rating: 4.7,
+    averageDeliveryTime: 25
+  },
+  {
+    deliveryBoyId: "d2",
+    date: "2023-10-14",
+    completedOrders: 7,
+    earnings: 135.80,
+    rating: 4.8,
+    averageDeliveryTime: 30
+  },
+  {
+    deliveryBoyId: "d2",
+    date: "2023-10-15",
+    completedOrders: 9,
+    earnings: 168.45,
+    rating: 4.6,
+    averageDeliveryTime: 32
+  }
+];
+
+export const deliveryNotifications: DeliveryNotification[] = [
+  {
+    id: "n1",
+    deliveryBoyId: "d1",
+    orderId: "ORD-002",
+    message: "New delivery assignment: Order #ORD-002",
+    timestamp: "2023-10-15T10:30:00Z",
+    read: false,
+    type: "assignment"
+  },
+  {
+    id: "n2",
+    deliveryBoyId: "d2",
+    orderId: "ORD-003",
+    message: "New delivery assignment: Order #ORD-003",
+    timestamp: "2023-10-15T09:15:00Z",
+    read: true,
+    type: "assignment"
+  },
+  {
+    id: "n3",
+    deliveryBoyId: "d1",
+    orderId: "ORD-001",
+    message: "Customer has changed delivery address for Order #ORD-001",
+    timestamp: "2023-10-14T14:20:00Z",
+    read: true,
+    type: "update"
   }
 ];
 
@@ -709,4 +881,176 @@ export const updateOrderStatus = (
   
   orders[orderIndex] = updatedOrder;
   return updatedOrder;
+};
+
+export const getDeliveryBoyById = (id: string): DeliveryBoy | undefined => {
+  return deliveryBoys.find(boy => boy.id === id);
+};
+
+export const getDeliveryBoysByZone = (zoneId: string): DeliveryBoy[] => {
+  return deliveryBoys.filter(boy => 
+    boy.assignedZones.includes(zoneId) && 
+    boy.active && 
+    boy.status === 'available'
+  );
+};
+
+export const getDeliveryBoyPerformance = (
+  deliveryBoyId: string,
+  startDate?: string,
+  endDate?: string
+): DeliveryPerformance[] => {
+  let performances = deliveryPerformances.filter(perf => 
+    perf.deliveryBoyId === deliveryBoyId
+  );
+  
+  if (startDate) {
+    performances = performances.filter(perf => perf.date >= startDate);
+  }
+  
+  if (endDate) {
+    performances = performances.filter(perf => perf.date <= endDate);
+  }
+  
+  return performances;
+};
+
+export const getDeliveryBoyNotifications = (
+  deliveryBoyId: string,
+  unreadOnly: boolean = false
+): DeliveryNotification[] => {
+  let notifications = deliveryNotifications.filter(
+    notif => notif.deliveryBoyId === deliveryBoyId
+  );
+  
+  if (unreadOnly) {
+    notifications = notifications.filter(notif => !notif.read);
+  }
+  
+  return notifications.sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+  );
+};
+
+export const markNotificationAsRead = (notificationId: string): boolean => {
+  const index = deliveryNotifications.findIndex(n => n.id === notificationId);
+  if (index !== -1) {
+    deliveryNotifications[index].read = true;
+    return true;
+  }
+  return false;
+};
+
+export const assignOrderToDeliveryBoy = (
+  orderId: string,
+  deliveryBoyId: string
+): boolean => {
+  const orderIndex = orders.findIndex(o => o.id === orderId);
+  const deliveryBoyIndex = deliveryBoys.findIndex(d => d.id === deliveryBoyId);
+  
+  if (orderIndex === -1 || deliveryBoyIndex === -1) {
+    return false;
+  }
+  
+  if (deliveryBoys[deliveryBoyIndex].status !== 'available') {
+    return false;
+  }
+  
+  // Update order with delivery person details
+  orders[orderIndex].deliveryPersonId = deliveryBoyId;
+  orders[orderIndex].deliveryPersonName = deliveryBoys[deliveryBoyIndex].name;
+  
+  // Update delivery boy status
+  deliveryBoys[deliveryBoyIndex].status = 'on_delivery';
+  deliveryBoys[deliveryBoyIndex].currentOrderId = orderId;
+  
+  // Create notification for delivery boy
+  const notification: DeliveryNotification = {
+    id: `n${deliveryNotifications.length + 1}`,
+    deliveryBoyId,
+    orderId,
+    message: `New delivery assignment: Order #${orderId}`,
+    timestamp: new Date().toISOString(),
+    read: false,
+    type: 'assignment'
+  };
+  
+  deliveryNotifications.push(notification);
+  
+  return true;
+};
+
+export const updateDeliveryStatus = (
+  orderId: string,
+  status: OrderStatus,
+  deliveryBoyId: string
+): boolean => {
+  if (!['ready_to_ship', 'out_for_delivery', 'delivered'].includes(status)) {
+    return false;
+  }
+  
+  const orderUpdate = updateOrderStatus(orderId, status, `delivery_${deliveryBoyId}`);
+  if (!orderUpdate) return false;
+  
+  // If delivered, update delivery boy status to available
+  if (status === 'delivered') {
+    const deliveryBoyIndex = deliveryBoys.findIndex(d => d.id === deliveryBoyId);
+    if (deliveryBoyIndex !== -1) {
+      deliveryBoys[deliveryBoyIndex].status = 'available';
+      deliveryBoys[deliveryBoyIndex].currentOrderId = undefined;
+      
+      // Add to performance record
+      const today = new Date().toISOString().split('T')[0];
+      const perfIndex = deliveryPerformances.findIndex(
+        p => p.deliveryBoyId === deliveryBoyId && p.date === today
+      );
+      
+      if (perfIndex !== -1) {
+        deliveryPerformances[perfIndex].completedOrders += 1;
+        deliveryPerformances[perfIndex].earnings += orderUpdate.totalAmount * 0.1; // 10% commission
+      } else {
+        deliveryPerformances.push({
+          deliveryBoyId,
+          date: today,
+          completedOrders: 1,
+          earnings: orderUpdate.totalAmount * 0.1,
+          rating: 5,
+          averageDeliveryTime: 30
+        });
+      }
+    }
+  }
+  
+  return true;
+};
+
+export const addDeliveryBoy = (deliveryBoy: Omit<DeliveryBoy, "id">): DeliveryBoy => {
+  const newDeliveryBoy = {
+    ...deliveryBoy,
+    id: `d${deliveryBoys.length + 1}`,
+  };
+  deliveryBoys.push(newDeliveryBoy);
+  return newDeliveryBoy;
+};
+
+export const updateDeliveryBoy = (updatedDeliveryBoy: DeliveryBoy): DeliveryBoy | null => {
+  const index = deliveryBoys.findIndex(d => d.id === updatedDeliveryBoy.id);
+  if (index !== -1) {
+    deliveryBoys[index] = updatedDeliveryBoy;
+    return updatedDeliveryBoy;
+  }
+  return null;
+};
+
+export const deleteDeliveryBoy = (deliveryBoyId: string): boolean => {
+  const index = deliveryBoys.findIndex(d => d.id === deliveryBoyId);
+  if (index !== -1) {
+    // Check if delivery boy is currently on a delivery
+    if (deliveryBoys[index].status === 'on_delivery') {
+      return false; // Cannot delete while on delivery
+    }
+    deliveryBoys.splice(index, 1);
+    return true;
+  }
+  return false;
 };
