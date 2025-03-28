@@ -352,3 +352,361 @@ export const deleteVendor = (vendorId: string) => {
   }
   return false;
 };
+
+export interface Order {
+  id: string;
+  customerId: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  vendorId: string;
+  vendorName: string;
+  locationId: string;
+  locationName: string;
+  deliveryPersonId?: string;
+  deliveryPersonName?: string;
+  products: OrderProduct[];
+  totalAmount: number;
+  status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  paymentMethod: string;
+  createdAt: string;
+  updatedAt: string;
+  statusHistory: StatusUpdate[];
+  deliveryAddress: Address;
+  notes?: string;
+}
+
+export interface OrderProduct {
+  id: string;
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+}
+
+export interface StatusUpdate {
+  status: OrderStatus;
+  timestamp: string;
+  updatedBy: string;
+  note?: string;
+}
+
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+export type OrderStatus = 'new' | 'confirmed' | 'processing' | 'ready_to_ship' | 'out_for_delivery' | 'delivered' | 'cancelled' | 'returned';
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+
+export const statusLabels: Record<OrderStatus, string> = {
+  new: 'New',
+  confirmed: 'Confirmed',
+  processing: 'Processing',
+  ready_to_ship: 'Ready to Ship',
+  out_for_delivery: 'Out for Delivery',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+  returned: 'Returned'
+};
+
+export const statusColors: Record<OrderStatus, string> = {
+  new: 'bg-blue-100 text-blue-800',
+  confirmed: 'bg-purple-100 text-purple-800',
+  processing: 'bg-yellow-100 text-yellow-800',
+  ready_to_ship: 'bg-indigo-100 text-indigo-800',
+  out_for_delivery: 'bg-orange-100 text-orange-800',
+  delivered: 'bg-green-100 text-green-800',
+  cancelled: 'bg-red-100 text-red-800',
+  returned: 'bg-gray-100 text-gray-800'
+};
+
+export const orders: Order[] = [
+  {
+    id: "ORD-001",
+    customerId: "c1",
+    customerName: "John Doe",
+    customerEmail: "john@example.com",
+    customerPhone: "+1 555-123-4567",
+    vendorId: "v1",
+    vendorName: "Artisan Crafts",
+    locationId: "us-ca-sf",
+    locationName: "San Francisco",
+    products: [
+      {
+        id: "op1",
+        productId: "p1",
+        name: "Handcrafted Wooden Bowl",
+        price: 49.99,
+        quantity: 2,
+        subtotal: 99.98
+      }
+    ],
+    totalAmount: 99.98,
+    status: "new",
+    paymentStatus: "paid",
+    paymentMethod: "Credit Card",
+    createdAt: "2023-10-15T08:30:00Z",
+    updatedAt: "2023-10-15T08:30:00Z",
+    statusHistory: [
+      {
+        status: "new",
+        timestamp: "2023-10-15T08:30:00Z",
+        updatedBy: "system",
+      }
+    ],
+    deliveryAddress: {
+      street: "123 Main St",
+      city: "San Francisco",
+      state: "CA",
+      zipCode: "94105",
+      country: "USA"
+    }
+  },
+  {
+    id: "ORD-002",
+    customerId: "c2",
+    customerName: "Jane Smith",
+    customerEmail: "jane@example.com",
+    customerPhone: "+1 555-987-6543",
+    vendorId: "v2",
+    vendorName: "Tech Haven",
+    locationId: "us-ny-nyc",
+    locationName: "New York City",
+    deliveryPersonId: "d1",
+    deliveryPersonName: "Mike Johnson",
+    products: [
+      {
+        id: "op2",
+        productId: "p2",
+        name: "Bluetooth Headphones",
+        price: 129.99,
+        quantity: 1,
+        subtotal: 129.99
+      },
+      {
+        id: "op3",
+        productId: "p3",
+        name: "Wireless Charger",
+        price: 35.50,
+        quantity: 1,
+        subtotal: 35.50
+      }
+    ],
+    totalAmount: 165.49,
+    status: "processing",
+    paymentStatus: "paid",
+    paymentMethod: "PayPal",
+    createdAt: "2023-10-14T14:45:00Z",
+    updatedAt: "2023-10-15T10:20:00Z",
+    statusHistory: [
+      {
+        status: "new",
+        timestamp: "2023-10-14T14:45:00Z",
+        updatedBy: "system",
+      },
+      {
+        status: "confirmed",
+        timestamp: "2023-10-14T15:00:00Z",
+        updatedBy: "vendor_v2",
+      },
+      {
+        status: "processing",
+        timestamp: "2023-10-15T10:20:00Z",
+        updatedBy: "vendor_v2",
+        note: "Preparing your order"
+      }
+    ],
+    deliveryAddress: {
+      street: "456 Broadway",
+      city: "New York",
+      state: "NY",
+      zipCode: "10013",
+      country: "USA"
+    }
+  },
+  {
+    id: "ORD-003",
+    customerId: "c3",
+    customerName: "Robert Chen",
+    customerEmail: "robert@example.com",
+    customerPhone: "+1 555-456-7890",
+    vendorId: "v3",
+    vendorName: "Global Goods",
+    locationId: "ca-on",
+    locationName: "Ontario",
+    deliveryPersonId: "d2",
+    deliveryPersonName: "Sarah Williams",
+    products: [
+      {
+        id: "op4",
+        productId: "p4",
+        name: "Moroccan Tea Set",
+        price: 89.00,
+        quantity: 1,
+        subtotal: 89.00
+      }
+    ],
+    totalAmount: 89.00,
+    status: "delivered",
+    paymentStatus: "paid",
+    paymentMethod: "Credit Card",
+    createdAt: "2023-10-10T09:15:00Z",
+    updatedAt: "2023-10-12T16:40:00Z",
+    statusHistory: [
+      {
+        status: "new",
+        timestamp: "2023-10-10T09:15:00Z",
+        updatedBy: "system",
+      },
+      {
+        status: "confirmed",
+        timestamp: "2023-10-10T09:30:00Z",
+        updatedBy: "vendor_v3",
+      },
+      {
+        status: "processing",
+        timestamp: "2023-10-10T11:20:00Z",
+        updatedBy: "vendor_v3",
+      },
+      {
+        status: "ready_to_ship",
+        timestamp: "2023-10-11T08:45:00Z",
+        updatedBy: "vendor_v3",
+      },
+      {
+        status: "out_for_delivery",
+        timestamp: "2023-10-12T09:30:00Z",
+        updatedBy: "delivery_d2",
+      },
+      {
+        status: "delivered",
+        timestamp: "2023-10-12T16:40:00Z",
+        updatedBy: "delivery_d2",
+        note: "Left at front door"
+      }
+    ],
+    deliveryAddress: {
+      street: "789 King Street",
+      city: "Toronto",
+      state: "ON",
+      zipCode: "M5V 1M9",
+      country: "Canada"
+    }
+  },
+  {
+    id: "ORD-004",
+    customerId: "c4",
+    customerName: "Emma Wilson",
+    customerEmail: "emma@example.com",
+    customerPhone: "+1 555-234-5678",
+    vendorId: "v5",
+    vendorName: "Eco Wares",
+    locationId: "us-ca",
+    locationName: "California",
+    products: [
+      {
+        id: "op5",
+        productId: "p5",
+        name: "Bamboo Cutlery Set",
+        price: 24.99,
+        quantity: 3,
+        subtotal: 74.97
+      },
+      {
+        id: "op6",
+        productId: "p6",
+        name: "Reusable Shopping Bags",
+        price: 18.50,
+        quantity: 2,
+        subtotal: 37.00
+      }
+    ],
+    totalAmount: 111.97,
+    status: "ready_to_ship",
+    paymentStatus: "paid",
+    paymentMethod: "Credit Card",
+    createdAt: "2023-10-14T16:20:00Z",
+    updatedAt: "2023-10-16T11:15:00Z",
+    statusHistory: [
+      {
+        status: "new",
+        timestamp: "2023-10-14T16:20:00Z",
+        updatedBy: "system",
+      },
+      {
+        status: "confirmed",
+        timestamp: "2023-10-14T16:45:00Z",
+        updatedBy: "vendor_v5",
+      },
+      {
+        status: "processing",
+        timestamp: "2023-10-15T09:30:00Z",
+        updatedBy: "vendor_v5",
+      },
+      {
+        status: "ready_to_ship",
+        timestamp: "2023-10-16T11:15:00Z",
+        updatedBy: "vendor_v5",
+        note: "Package ready for pickup"
+      }
+    ],
+    deliveryAddress: {
+      street: "101 Eco Street",
+      city: "Berkeley",
+      state: "CA",
+      zipCode: "94704",
+      country: "USA"
+    }
+  }
+];
+
+export const getOrdersByVendor = (vendorId: string): Order[] => {
+  return orders.filter(order => order.vendorId === vendorId);
+};
+
+export const getOrdersByLocation = (locationId: string): Order[] => {
+  return orders.filter(order => order.locationId === locationId);
+};
+
+export const getOrdersByStatus = (status: OrderStatus | 'all'): Order[] => {
+  if (status === 'all') return orders;
+  return orders.filter(order => order.status === status);
+};
+
+export const updateOrderStatus = (
+  orderId: string, 
+  newStatus: OrderStatus, 
+  updatedBy: string, 
+  note?: string
+): Order | null => {
+  const orderIndex = orders.findIndex(order => order.id === orderId);
+  
+  if (orderIndex === -1) return null;
+  
+  const order = orders[orderIndex];
+  const now = new Date().toISOString();
+  
+  const updatedOrder: Order = {
+    ...order,
+    status: newStatus,
+    updatedAt: now,
+    statusHistory: [
+      ...order.statusHistory,
+      {
+        status: newStatus,
+        timestamp: now,
+        updatedBy,
+        note
+      }
+    ]
+  };
+  
+  orders[orderIndex] = updatedOrder;
+  return updatedOrder;
+};
