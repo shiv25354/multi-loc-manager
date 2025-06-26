@@ -133,6 +133,61 @@ export const locations: Location[] = [
     active: true,
     coordinates: { lat: 22.9868, lng: 87.8550 }
   },
+  {
+    id: "chhattisgarh",
+    name: "Chhattisgarh",
+    type: "state",
+    parent: "india",
+    vendorCount: 120,
+    ordersCount: 4500,
+    revenue: 980000,
+    active: true,
+    coordinates: { lat: 21.2787, lng: 81.8661 }
+  },
+  {
+    id: "andhrapradesh",
+    name: "Andhra Pradesh",
+    type: "state",
+    parent: "india",
+    vendorCount: 160,
+    ordersCount: 5800,
+    revenue: 1250000,
+    active: true,
+    coordinates: { lat: 15.9129, lng: 79.7400 }
+  },
+  {
+    id: "telangana",
+    name: "Telangana",
+    type: "state",
+    parent: "india",
+    vendorCount: 140,
+    ordersCount: 5200,
+    revenue: 1100000,
+    active: true,
+    coordinates: { lat: 18.1124, lng: 79.0193 }
+  },
+  {
+    id: "odisha",
+    name: "Odisha",
+    type: "state",
+    parent: "india",
+    vendorCount: 110,
+    ordersCount: 3900,
+    revenue: 850000,
+    active: true,
+    coordinates: { lat: 20.9517, lng: 85.0985 }
+  },
+  {
+    id: "madhyapradesh",
+    name: "Madhya Pradesh",
+    type: "state",
+    parent: "india",
+    vendorCount: 150,
+    ordersCount: 5500,
+    revenue: 1200000,
+    active: true,
+    coordinates: { lat: 22.9734, lng: 78.6569 }
+  },
   // Cities in Maharashtra
   {
     id: "mumbai",
