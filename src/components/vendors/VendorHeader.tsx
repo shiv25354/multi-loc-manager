@@ -13,9 +13,9 @@ export function VendorHeader({ isAddVendorOpen, setIsAddVendorOpen, onAddVendor 
   return (
     <div className="flex flex-row items-center justify-between space-y-0 pb-2">
       <div className="space-y-1">
-        <CardTitle>Vendors</CardTitle>
+        <CardTitle>Grocery Vendors</CardTitle>
         <CardDescription>
-          Manage vendors across all your marketplace locations
+          Manage grocery vendors, their products, and delivery areas across all locations
         </CardDescription>
       </div>
       <AddVendorDialog 

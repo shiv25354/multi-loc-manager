@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { VendorDetail } from "@/components/vendors/VendorDetail";
 import { VendorTable } from "@/components/vendors/VendorTable";
 import { VendorHeader } from "@/components/vendors/VendorHeader";
+import { VendorStats } from "@/components/vendors/VendorStats";
 
 const Vendors = () => {
   const [isAddVendorOpen, setIsAddVendorOpen] = useState(false);
@@ -63,13 +64,15 @@ const Vendors = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
+      <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Vendor Management</h1>
           <p className="text-muted-foreground mt-1">
-            Manage vendors and their authorized locations
+            Manage grocery vendors, their products, and performance across all locations
           </p>
         </div>
+
+        <VendorStats vendors={vendorList} />
 
         {selectedVendor ? (
           <VendorDetail 

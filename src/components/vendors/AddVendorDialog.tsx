@@ -17,14 +17,14 @@ export function AddVendorDialog({ isOpen, onOpenChange, onSubmit }: AddVendorDia
       <DialogTrigger asChild>
         <Button className="flex items-center gap-1">
           <Plus className="h-4 w-4" />
-          <span>Add Vendor</span>
+          <span>Add Grocery Vendor</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Add New Vendor</DialogTitle>
+          <DialogTitle>Add New Grocery Vendor</DialogTitle>
           <DialogDescription>
-            Register a new vendor to your marketplace
+            Register a new grocery vendor to your delivery platform
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
