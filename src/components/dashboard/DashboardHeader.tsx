@@ -2,12 +2,13 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { 
-  Globe, 
+  ShoppingCart, 
   MapPin, 
   Users,
-  ShoppingCart,
+  Package,
   TrendingUp,
-  Calendar
+  Calendar,
+  Truck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -61,37 +62,43 @@ const DashboardHeader: React.FC = () => {
         <div className="inline-block">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <Calendar className="h-4 w-4" />
-            <span>Last updated: June 12, 2023 at 10:45 AM</span>
+            <span>Last updated: {new Date().toLocaleDateString('en-IN', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}</span>
           </div>
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
-        <p className="text-muted-foreground mt-1">Monitor your marketplace performance across all locations</p>
+        <h1 className="text-3xl font-bold tracking-tight">Grocery Delivery Dashboard</h1>
+        <p className="text-muted-foreground mt-1">Monitor your grocery delivery performance across all locations in India</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          title="Total Locations"
-          value="24"
-          icon={Globe}
-          trend={5.2}
-        />
-        <StatCard
           title="Active Stores"
-          value="568"
+          value="142"
           icon={MapPin}
-          trend={3.1}
+          trend={8.2}
         />
         <StatCard
-          title="Total Vendors"
-          value="1,254"
-          icon={Users}
-          trend={-2.3}
-        />
-        <StatCard
-          title="Total Orders"
-          value="28,456"
+          title="Total Orders Today"
+          value="1,847"
           icon={ShoppingCart}
-          trend={7.8}
+          trend={12.1}
+        />
+        <StatCard
+          title="Delivery Partners"
+          value="324"
+          icon={Truck}
+          trend={5.4}
+        />
+        <StatCard
+          title="Products Available"
+          value="15,678"
+          icon={Package}
+          trend={-2.1}
         />
       </div>
     </div>

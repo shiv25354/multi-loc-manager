@@ -1,6 +1,7 @@
 
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "@/components/auth/AuthProvider";
 import {
   Sidebar,
   SidebarContent,
@@ -16,6 +17,14 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Globe,
   Home,
   Package,
@@ -26,6 +35,8 @@ import {
   Boxes,
   LogOut,
   Map,
+  User,
+  UserCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -84,6 +95,11 @@ const menuItems = [
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const location = useLocation();
   const [open, setOpen] = useState(true);
+  const { user, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <SidebarProvider defaultOpen={open} onOpenChange={setOpen}>
@@ -100,13 +116,36 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
               </div>
             </div>
             <div className="ml-auto flex items-center gap-4">
-              <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww&auto=format&fit=crop&w=50&q=80" 
-                  alt="User avatar"
-                  className="h-full w-full object-cover"
-                />
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2 hover:bg-gray-100 rounded-full p-2 transition-colors">
+                    <div className="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div className="hidden md:block text-left">
+                      <p className="text-sm font-medium">{user?.name}</p>
+                      <p className="text-xs text-muted-foreground capitalize">{user?.role}</p>
+                    </div>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    <UserCircle className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Settings className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </header>
           <main className="flex-1 overflow-auto">
@@ -122,16 +161,23 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
 function AppSidebar() {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="p-4">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-md bg-primary flex items-center justify-center">
-            <Boxes className="h-5 w-5 text-white" />
+            <ShoppingCart className="h-5 w-5 text-white" />
           </div>
-          <div className="font-semibold text-lg">Multi-Loc</div>
+          <div className="font-semibold text-lg">Grocery Delivery</div>
         </div>
+        {user && (
+          <div className="mt-3 p-2 bg-muted/50 rounded-md">
+            <p className="text-sm font-medium">{user.name}</p>
+            <p className="text-xs text-muted-foreground capitalize">{user.role} Dashboard</p>
+          </div>
+        )}
       </SidebarHeader>
       <SidebarContent className="p-2">
         <SidebarGroup>
@@ -190,7 +236,10 @@ function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="p-4 border-t mt-auto">
-        <button className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors">
+        <button 
+          onClick={logout}
+          className="flex w-full items-center gap-3 px-3 py-2 rounded-md text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
+        >
           <LogOut className="h-5 w-5" />
           <span>Log Out</span>
         </button>
